@@ -1,0 +1,235 @@
+{
+  "info": {
+    "_postman_id": "4cd94fed-69e5-471b-886c-e45bb71a7458",
+    "name": "Patient Health Dashboard",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60179150",
+    "_collection_link": "https://go.postman.co/collection/60179150-4cd94fed-69e5-471b-886c-e45bb71a7458?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Search Patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is a FHIR Bundle\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.resourceType).to.eql(\"Bundle\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/fhir+json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/Patient?family=Gonzalez&_count=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Patient"
+          ],
+          "query": [
+            {
+              "key": "family",
+              "value": "Gonzalez"
+            },
+            {
+              "key": "_count",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "View Vitals",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is a FHIR Bundle\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.resourceType).to.eql(\"Bundle\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/fhir+json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/Observation?patient=15260&_count=20",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Observation"
+          ],
+          "query": [
+            {
+              "key": "patient",
+              "value": "15260"
+            },
+            {
+              "key": "_count",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Vital Sign",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"New Observation created (201)\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Returned resource is an Observation\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.resourceType).to.eql(\"Observation\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/fhir+json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/fhir+json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"resourceType\": \"Observation\",\r\n  \"status\": \"final\",\r\n  \"category\": [\r\n    {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\r\n          \"code\": \"vital-signs\",\r\n          \"display\": \"Vital Signs\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://loinc.org\",\r\n        \"code\": \"29463-7\",\r\n        \"display\": \"Body Weight\"\r\n      }\r\n    ],\r\n    \"text\": \"Body Weight\"\r\n  },\r\n  \"subject\": {\r\n    \"reference\": \"Patient/828495\"\r\n  },\r\n  \"effectiveDateTime\": \"2026-11-16T17:24:00Z\",\r\n  \"valueQuantity\": {\r\n    \"value\": 120,\r\n    \"unit\": \"lbs\",\r\n    \"system\": \"http://unitsofmeasure.org\",\r\n    \"code\": \"[lb_av]\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Observation",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Observation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"New Observation created (201)\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Returned resource is a Patient\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.resourceType).to.eql(\"Patient\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/fhir+json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/fhir+json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"resourceType\": \"Patient\",\r\n  \"active\": true,\r\n  \"name\": [\r\n    {\r\n      \"use\": \"official\",\r\n      \"family\": \"Karlinsky\",\r\n      \"given\": [\"{{$randomFirstName}}\"]\r\n    }\r\n  ],\r\n  \"gender\": \"female\",\r\n  \"birthDate\": \"1998-06-10\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Patient",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Patient"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Blood Sugar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"New Observation created (201)\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Returned resource is an Observation\", function () {\r\n    const json = pm.response.json();\r\n    pm.expect(json.resourceType).to.eql(\"Observation\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/fhir+json"
+          },
+          {
+            "key": "content-type",
+            "value": "application/fhir+json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"resourceType\": \"Observation\",\r\n  \"status\": \"final\",\r\n  \"category\": [\r\n    {\r\n      \"coding\": [\r\n        {\r\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\r\n          \"code\": \"laboratory\",\r\n          \"display\": \"Laboratory\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"code\": {\r\n    \"coding\": [\r\n      {\r\n        \"system\": \"http://loinc.org\",\r\n        \"code\": \"2339-0\",\r\n        \"display\": \"Glucose [Mass/volume] in Blood\"\r\n      }\r\n    ],\r\n    \"text\": \"Blood Glucose\"\r\n  },\r\n  \"subject\": {\r\n    \"reference\": \"Patient/828495\"\r\n  },\r\n  \"effectiveDateTime\": \"2026-11-16T17:16:00Z\",\r\n  \"valueQuantity\": {\r\n    \"value\": 98,\r\n    \"unit\": \"mg/dL\",\r\n    \"system\": \"http://unitsofmeasure.org\",\r\n    \"code\": \"mg/dL\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Observation",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Observation"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
